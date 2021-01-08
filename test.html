@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" id="file" />
+    <script>
+      var reader = new FileReader()
+      var file = document.getElementById('file')
+      var fileData = null
+      file.onchange = function (e) {
+        fileData = this.files[0] //这是我们上传的文件
+        reader.readAsDataURL(fileData) //异步读取文件内容，结果用data:url的字符串形式表示
+        /*当读取操作成功完成时调用*/
+        reader.onload = function (e) {
+          console.log(e, 'eee') //查看对象属性里面有个result属性，属性值，是一大串的base64格式的东西，这个就是我们要的图片
+          console.log(this.result, 'resultresult') //取得数据 这里的this指向FileReader（）对象的实例reader
+          image.setAttribute('src', this.result) //赋值给img标签让它显示出来
+        }
+      }
+    </script>
+  </body>
+</html>

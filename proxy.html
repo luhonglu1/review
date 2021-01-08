@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <span id="container">1</span>
+    <button id="button">click me</button>
+    <script>
+      let obj = {
+        value: 1,
+      }
+      let _value = 1
+      //   Object.defineProperty(obj, 'value', {
+      //     get: () => {
+      //       return _value
+      //     },
+      //     set: (newValue) => {
+      //       _value = newValue
+      //       document.getElementById('container').innerHTML = newValue
+      //     },
+      //   })
+
+      //   document.getElementById('button').addEventListener('click', () => {
+      //     obj.value += 1
+      //   })
+
+      // Object.defineProperty 方法
+      //   ;(function () {
+      //     var _this = this
+      //     function watch(obj, name, func) {
+      //       var value = obj[name]
+
+      //       Object.defineProperty(obj, name, {
+      //         get: () => {
+      //           return value
+      //         },
+      //         set: (newValue) => {
+      //           value = newValue
+      //           func(newValue)
+      //         },
+      //       })
+      //     }
+      //     this.watch = watch
+      //   })()
+
+      // proxy 方法
+      ;(function () {
+        function watch(target, func) {
+          let proxy = new Proxy(target, {
+            get: (target, prop) => {
+              return target.prop
+            },
+            set: (target, prop, value) => {
+              target[prop] = value
+              func(prop, value)
+            },
+          })
+          return proxy
+        }
+        this.watch = watch
+      })()
+
+      // Object.defineProperty 方法
+      //   watch(obj, 'value', (newValue) => {
+      //     document.getElementById('container').innerHTML = newValue
+      //   })
+
+      // proxy 方法
+      let newObj = watch(obj, (prop, newValue) => {
+        if (prop == 'value') {
+          document.getElementById('container').innerHTML = newValue
+        }
+      })
+
+      document.getElementById('button').addEventListener('click', () => {
+        newObj.value += 1
+      })
+    </script>
+  </body>
+</html>
