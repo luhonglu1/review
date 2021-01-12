@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // proxy
+      // 用在函数节流中
+      const proxy = (func, time) => {
+        let previous = new Date(0).getTime()
+        let handler = {
+          apply(target, context, args) {
+            let now = new Date().getTime()
+            if (now - previous > time) {
+              previous = now
+              Reflect.apply(func, context, args)
+            }
+          },
+        }
+        return new Proxy(func, handler)
+      }
+
+      function func() {
+        console.log(1)
+      }
+
+      window.addEventListener('mousemove', proxy(func, 3000))
+    </script>
+  </body>
+</html>
