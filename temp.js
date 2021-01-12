@@ -1,21 +1,18 @@
-function foo() {
-  console.log(a) // 报错 没有声明关键字
-  a = 1
+//store.js
+const { reducer } = require('./reducer')
+const createStore = (reducer) => {
+  let currentState = {}
+  function getState() {
+    return currentState
+  }
+  function dispatch(action) {
+    currentState = reducer(currentState, action)
+  }
+  function subscribe() {}
+  dispatch({ type: '@@REDUX_INIT' }) // 初始化store数据
+  return { getState, subscribe, dispatch }
 }
 
-foo()
-
-fetch('http://local.shicai56.com:4051/test-pms-api/stock/rule/queryList', {
-  method: 'POST',
-  body: JSON.stringify({ storeId: '', valid: '' }),
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
-  .then((res) => res.json())
-  .then((data) => {
-    console.log(data)
-  })
-  .catch((e) => {
-    console.log(e)
-  })
+const store = createStore(reducer) //创建store
+store.dispatch({ type: 'plus' }) //执行加法操作,给count加1
+console.log(store.getState()) //获取state
