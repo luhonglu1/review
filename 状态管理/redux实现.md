@@ -149,3 +149,26 @@ subject.addObserver(ob2)          //观察者2订阅subject的通知
 subject.notify()                  //发出广播,执行所有观察者的update方法
 
 ```
+
+有了上面观察者模式的例子，subscribe的实现应该很好理解
+```js
+import { reducer } from './reducer'
+export const createStore = (reducer) => {        
+    let currentState = {}        
+    let observers = []             //观察者队列        
+    function getState() {                
+        return currentState        
+    }        
+    function dispatch(action) {                
+        currentState = reducer(currentState, action)                
+        observers.forEach(fn => fn())        
+    }        
+    function subscribe(fn) {                
+        observers.push(fn)        
+    }        
+    dispatch({ type: '@@REDUX_INIT' })  //初始化store数据        
+    return { getState, subscribe, dispatch }
+}
+```
+
+具体实现见 ./redux 文件
